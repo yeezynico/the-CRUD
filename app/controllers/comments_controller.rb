@@ -18,12 +18,11 @@ class CommentsController < ApplicationController
   end
 
   def update
-    @gossip = Gossip.find(params[:gossip_id])
-    @comment = @gossip.comments.find(params[:id])
-    if @comment.update(article_params)
+    @comment = Comment.find(params[:id])
+    if @comment.update(content: params[:content])
       redirect_to basic_pages_home_path
     else
-      render :edit, status: :unprocessable_entity
+      render :edit
     end
   end
 
