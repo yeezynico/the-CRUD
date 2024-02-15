@@ -1,36 +1,41 @@
 class CommentsController < ApplicationController
-  def new
-    @gossip = Gossip.find(params[:gossip_id]) 
-    @comment = Comment.new
-  end
-
   def create
     @gossip = Gossip.find(params[:gossip_id])
     user = User.all.sample
-    @comment = Comment.new(content: params[:content], gossip: @gossip, user: user)
-    if @comment.save
-      redirect_to gossip_path(@gossip.id)
-    else
-      render gossip_path(@gossip.id)
-    end
-  end 
+    @comment = Comment.create(content: params[:content], gossip: @gossip, user: user)
+    redirect_to gossip_path(@gossip)
+  end
 
-  def edit 
-    @comment = Comment.find_by(params[:comment_id])
+  def destroy
+    @gossip = Gossip.find(params[:gossip_id])
+    @comment = @gossip.comments.find(params[:id])
+    @comment.destroy
+    redirect_to gossip_path(@gossip), status: :see_other
+  end
+
+  def edit
+    @comment = Comment.find(params[:id])
   end
 
   def update
-    @comment = Comment.find(params[:comment_id])
-    if @comment.update(content: params[:content])
+    @gossip = Gossip.find(params[:gossip_id])
+    @comment = @gossip.comments.find(params[:id])
+    if @comment.update(article_params)
       redirect_to basic_pages_home_path
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 
-  def destroy 
-    @comment = Comment.find(params[:id])
-    Comment.delete(@comment)
-    return redirect_to basic_pages_home_path
-  end
 end
+
+
+# def edit
+#   @gossip = Gossip.find(params[:id])
+# end
+
+# def update
+#   @gossip = Gossip.find(params[:id])
+#   if @gossip.update(post_params)
+#     redirect_to basic_pages_home_path
+# end

@@ -1,8 +1,9 @@
-<h1>Modifier le commentaire </h1>
-
-<%= form_tag gossip_comment_path, method: "put" do %>
-  <%= label_tag 'Commentaire' %>
-  <%= text_field_tag 'content', @comment.content %>
-  <br> <br>
-  <%= submit_tag "Modifier", class: "btn btn-secondary " %>
+<%= form_with model: [ @gossip, @gossip.comments.build ] do |form| %>
+  <p>
+    <%= form.label :content%><br>
+    <%= form.text_area :content %>
+  </p>
+  <p>
+    <%= form.submit %>
+  </p>
 <% end %>
